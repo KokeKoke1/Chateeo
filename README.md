@@ -1,83 +1,88 @@
-[readme.md](https://github.com/user-attachments/files/22728806/readme.md)
+[readme (1).md](https://github.com/user-attachments/files/22728851/readme.1.md)
 # Chateeo
 
-> **Uwaga:** Na podstawie struktury repo (foldery `Chateeo.API`, `Chateeo`, `SharedLibrary`, plik `.sln`) przygotowałem poniższy README. Nie wszystkie pliki źródłowe załadowały się w przeglądarce, więc tam, gdzie konieczne, zostawiłem czytelne miejsca na uzupełnienie (TODO). Jeśli chcesz, mogę automatycznie dopracować README po wskazaniu zawartości `appsettings`/konkretnych portów lub popełnieniu plików, które chcesz, żebym uwzględnił.
+**Chateeo** to firmowy komunikator internetowy zbudowany w technologii **ASP.NET Core** i **SignalR**, umożliwiający komunikację w czasie rzeczywistym między użytkownikami w ramach jednej organizacji. Aplikacja pozwala na tworzenie pokoi rozmów, przesyłanie wiadomości tekstowych oraz integrację z systemami autoryzacji firmowej.
 
 ---
 
-## Opis projektu
+## 🚀 Funkcje
 
-**Chateeo** to aplikacja (frontend + API) zbudowana w technologii .NET/C# (rozszerzenia w repo: `C#`, `HTML`, `CSS`). Projekt zawiera co najmniej trzy projekty/warstwy:
-
-- `Chateeo.API` — backend / Web API (ASP.NET Core).
-- `Chateeo` — aplikacja kliencka (może to być ASP.NET MVC / Razor / statyczne pliki frontendowe). Sprawdź zawartość folderu, żeby potwierdzić typ (MVC / SPA).
-- `SharedLibrary` — biblioteka współdzielona (modele, DTO, helpery).
-
-Celem README jest szybkie uruchomienie projektu lokalnie, wskazanie najważniejszych plików konfiguracyjnych oraz instrukcji rozwoju.
+- Komunikacja w czasie rzeczywistym dzięki **SignalR**.
+- Obsługa wielu użytkowników i pokoi rozmów.
+- Architektura warstwowa (API, frontend, biblioteka współdzielona).
+- Możliwość integracji z systemami logowania (np. Identity / JWT).
+- Skalowalny backend w oparciu o **ASP.NET Core Web API**.
 
 ---
 
-## Wymagania
+## 🧩 Struktura projektu
 
-- .NET SDK 7.0+ (dopasuj wersję do projektu; sprawdź `global.json`, jeśli jest obecny).
-- Visual Studio 2022 / Rider / VS Code (opcjonalnie).
-- (Opcjonalnie) SQL Server / PostgreSQL / Inna baza danych — sprawdź `appsettings.json` w `Chateeo.API`.
-- Git.
+- `Chateeo.API` – główny backend (ASP.NET Core Web API z SignalR Hubem).
+- `Chateeo` – aplikacja kliencka (frontend .NET lub SPA hostowane przez serwer).
+- `SharedLibrary` – modele danych i klasy pomocnicze współdzielone między frontendem i backendem.
 
 ---
 
-## Szybki start (CLI)
+## ⚙️ Technologie
 
-1. Sklonuj repo:
+- **.NET 7 / ASP.NET Core**
+- **SignalR** (komunikacja w czasie rzeczywistym)
+- **Entity Framework Core** (baza danych i migracje)
+- **C# 11**
+- **Razor / MVC / HTML / CSS / JS** (frontend)
+
+---
+
+## 💻 Instalacja i uruchomienie
+
+### 1. Klonowanie repozytorium
 
 ```bash
 git clone https://github.com/KokeKoke1/Chateeo.git
 cd Chateeo
 ```
 
-2. Przywróć pakiety i zbuduj rozwiązanie:
+### 2. Przywracanie zależności i budowanie
 
 ```bash
 dotnet restore
 dotnet build Chateeo.sln
 ```
 
-3. Skonfiguruj połączenie z bazą danych dla `Chateeo.API`:
+### 3. Konfiguracja bazy danych
 
-- Otwórz `Chateeo.API/appsettings.json` i ustaw `ConnectionStrings` (np. `DefaultConnection`).
-- Jeśli używasz migracji EF Core: uruchom migracje (przykład):
+W pliku `Chateeo.API/appsettings.json` ustaw połączenie w sekcji `ConnectionStrings`, np.:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=ChateeoDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+}
+```
+
+Zastosuj migracje, jeśli projekt używa **Entity Framework Core**:
 
 ```bash
 cd Chateeo.API
-# przykładowo dla EF Core CLI
 dotnet ef database update
 ```
 
-**TODO:** Uzupełnij konkretną instrukcję migracji zależnie od użytej bazy i konfiguracji w projekcie.
+### 4. Uruchomienie aplikacji
 
-4. Uruchom API:
+Uruchom backend:
 
 ```bash
 dotnet run --project Chateeo.API/Chateeo.API.csproj
 ```
 
-Domyślnie API powinno wystartować na porcie podanym w `launchSettings.json` (np. `https://localhost:5001`). Jeśli nie znasz portu, sprawdź `Chateeo.API/Properties/launchSettings.json`.
+Domyślnie dostępne pod adresem `https://localhost:5001` lub `http://localhost:5000`.
 
-5. Uruchom aplikację kliencką (jeśli to osobny projekt .NET):
+Frontend uruchom jako osobny projekt (jeśli wymaga):
 
 ```bash
 dotnet run --project Chateeo/Chateeo.csproj
 ```
 
-Lub jeśli frontend to statyczne/SPA, uruchom serwer dev (np. `npm`/`ng`/`vite`) — sprawdź folder `Chateeo`.
-
----
-
-## Konfiguracja
-
-- `Chateeo.API/appsettings.json` — główne ustawienia aplikacji (ConnectionStrings, JWT, inne klucze). Upewnij się, że poufne dane przechowujesz w `user secrets` lub zmiennych środowiskowych.
-
-- `Chateeo/` — sprawdź, czy projekt wymaga Node/NPM do budowy frontendu. Jeśli tak, wykonaj:
+lub, jeśli zawiera plik `package.json`:
 
 ```bash
 cd Chateeo
@@ -85,73 +90,61 @@ npm install
 npm run dev
 ```
 
-(Jeśli nie ma `package.json`, wtedy frontend jest najpewniej częścią projektu .NET i uruchamia się przez `dotnet run`.)
+---
+
+## 🔧 Konfiguracja środowiska
+
+- **Plik konfiguracyjny:** `Chateeo.API/appsettings.json`
+- **Sekrety użytkownika:** przechowuj poufne dane (np. klucze JWT, connection strings) w `dotnet user-secrets` lub zmiennych środowiskowych.
+- **Porty:** sprawdź `Chateeo.API/Properties/launchSettings.json`, aby poznać porty lokalne.
 
 ---
 
-## Dev: testy i lint
+## 🧪 Testy
 
-- Jeśli projekt zawiera testy — poszukaj folderu `Tests` lub projektów `*.Tests`. Uruchom testy poleceniem:
+Jeśli repo zawiera testy jednostkowe:
 
 ```bash
 dotnet test
 ```
 
-- Linter/formatowanie — zależy od repo (EditorConfig, dotnet-format, ESLint). Jeśli chcesz, mogę dodać konfigurację przykładową.
+---
+
+## 📦 Deployment (opcjonalnie)
+
+Chateeo można wdrożyć jako kontenery Docker:
+
+Przykład `Dockerfile` (API):
+
+```dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore Chateeo.sln
+RUN dotnet publish Chateeo.API/Chateeo.API.csproj -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "Chateeo.API.dll"]
+```
 
 ---
 
-## Najważniejsze pliki / gdzie szukać
+## 👥 Wkład w projekt
 
-- `Chateeo.API/Controllers/` — kontrolery Web API.
-- `Chateeo.API/Properties/launchSettings.json` — porty i profile uruchomieniowe.
-- `Chateeo/` — frontend / UI.
-- `SharedLibrary/` — wspólne modele/enumy.
-- `Chateeo.sln` — rozwiązanie .NET.
+1. Forkuj repozytorium.
+2. Utwórz nowy branch dla swojej funkcji.
+3. Zrób commit i otwórz Pull Request.
+4. Upewnij się, że wszystkie testy przechodzą pomyślnie.
 
----
 
-## Propozycja struktury README (do ewentualnego rozszerzenia)
-
-1. Opis projektu
-2. Technologie
-3. Instalacja i uruchomienie (lokalnie)
-4. Konfiguracja (baza danych, klucze)
-5. Jak rozwijać (branching, testy)
-6. Wskazówki dotyczące wdrożenia (Docker/Kubernetes) — jeśli potrzebujesz, mogę dodać przykładowy `Dockerfile` i `docker-compose`.
 
 ---
 
-## Wkład / Contributing
-
-1. Fork → branch → PR.
-2. Zadbaj o testy dla nowych funkcji.
-3. Opisz większe zmiany w `CHANGELOG.md` lub w opisie PR.
-
----
-
-## Licencja
-
-Brak pliku `LICENSE` w repo (na dzień przygotowania tego README). Jeżeli chcesz, mogę dodać przykładową licencję (MIT/Apache2.0). Wybierz którą preferujesz.
-
----
-
-## Kontakt
-
-Masz dodatkowe wymagania co do README (np. angielska wersja, badge'y CI, instrukcja Docker), napisz — dopracuję od ręki.
-
----
-
-### Co znalazłem i co jest niepełne
-
-Sprawdziłem repo pod adresem `https://github.com/KokeKoke1/Chateeo`. Widoczna struktura projektu zawiera foldery: `Chateeo.API`, `Chateeo`, `SharedLibrary` oraz plik `Chateeo.sln`. Nie widziałem pliku README lub LICENSE w repo. Podczas przeglądania GitHub część zawartości (szczegółowe pliki) nie załadowała się z powodów renderera strony (strona zwróciła komunikat "There was an error while loading. Please reload this page."). Dlatego nie mogłem przeczytać szczegółowych plików konfiguracyjnych (np. `appsettings.json`, `launchSettings.json`) — zostawiłem więc w README czytelne `TODO` i wskazówki, gdzie uzupełnić wartości (porty, connection stringi, instrukcje migracji).
-
-Jeśli chcesz, mogę teraz:
-
-- dodać plik `README.md` bezpośrednio do repo (potrzebowałbym uprawnień lub PR z Twojego forka),
-- albo jeśli wkleisz zawartość `Chateeo.API/appsettings.json` oraz `Chateeo/` (krótki opis), dopracuję README z dokładnymi portami i komendami.
-
----
-
-Powiedz jak chcesz dalej: wrzucić README do repo (przez PR) czy tylko przygotować plik lokalnie do wklejenia?  
+> Chateeo – bezpieczny, firmowy komunikator czasu rzeczywistego oparty na ASP.NET Core i SignalR.
 
