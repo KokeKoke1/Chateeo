@@ -1,0 +1,6 @@
+@Chateeo.API_HostAddress = http://localhost:5056
+
+GET {{Chateeo.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

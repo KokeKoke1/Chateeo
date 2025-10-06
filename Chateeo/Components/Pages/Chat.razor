@@ -1,0 +1,70 @@
+﻿@using Chateeo.Views
+@using Microsoft.AspNetCore.SignalR.Client;
+@using Chateeo.Services.Authentication
+@using SharedLibrary.Models
+
+@inject AuthenticationService _authenticationService
+<ul>
+	@if (conversation != null)
+	{
+		@if (conversation.Any())
+		{
+			foreach (var mess in conversation)
+			{
+				<li>@mess.SenderName: @mess.Message</li>
+			}
+		}
+	}
+</ul>
+<div class="input-group mb-3">
+	<input @bind-value=Message type ="text" class="form-control" placeholder="Wiadomość..." aria-label="Wiadomość..." aria-describedby="basic-addon2">
+    <div class="input-group-append">
+		<button class="btn btn-outline-secondary" type="button" @onclick=BtnSendMessage>Wyślij</button>
+    </div>
+</div>
+
+@code {
+	private HubConnection? hubConnection;
+	private List<ChatModel> conversation = new List<ChatModel>();
+	private string Message;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var user = await _authenticationService.GetAuthenticationAsync();
+		var chatId = App.SelectedChat.ChatId;
+		hubConnection = new HubConnectionBuilder()
+			.WithUrl("https://" + App.ServerAddress + "/ChatsHub?chatId=" + chatId, options =>
+			{
+				//options.Headers.Add("Authorization", "Bearer " + user.FirebaseToken);
+				if (App.Token != null)
+				{
+					options.Headers.Add("X-Tunnel-Authorization", "tunnel " + App.Token);
+				}
+			}).Build();
+		hubConnection.On<ChatModel>("ReciveMessage", (m) =>
+		{
+			AddMessage(m);
+		});
+		hubConnection.On<ChatModel[]>("History", (messages) =>
+			{
+				foreach (var m in messages)
+				{
+					AddMessage(m);
+				}
+			});
+		await hubConnection.StartAsync();
+	}
+	public async Task AddMessage(ChatModel m)
+	{
+		conversation.Add(m);
+		InvokeAsync(StateHasChanged);
+	}
+	public async Task BtnSendMessage()
+	{
+		if (hubConnection is not null) {
+			await hubConnection.SendAsync("SendMessage", Message, App.SelectedChat.ChatId, App.SelectedChat.Service, App.SelectedChat.Service, null);
+		}
+		Message = "";
+	}
+
+}
