@@ -1,129 +1,109 @@
-[readme (1).md](https://github.com/user-attachments/files/22728851/readme.1.md)
-# Chateeo
+Chateeo
 
-**Chateeo** to firmowy komunikator internetowy zbudowany w technologii **ASP.NET Core** i **SignalR**, umożliwiający komunikację w czasie rzeczywistym między użytkownikami w ramach jednej organizacji. Aplikacja pozwala na tworzenie pokoi rozmów, przesyłanie wiadomości tekstowych oraz integrację z systemami autoryzacji firmowej.
+Chateeo is a corporate instant messaging app built with ASP.NET Core and SignalR, enabling real-time communication between users within an organization. The application allows creating chat rooms, sending text messages, and integrating with corporate authentication systems.
 
----
+🚀 Features
 
-## 🚀 Funkcje
+Real-time communication using SignalR.
 
-- Komunikacja w czasie rzeczywistym dzięki **SignalR**.
-- Obsługa wielu użytkowników i pokoi rozmów.
-- Architektura warstwowa (API, frontend, biblioteka współdzielona).
-- Możliwość integracji z systemami logowania (np. Identity / JWT).
-- Skalowalny backend w oparciu o **ASP.NET Core Web API**.
+Support for multiple users and chat rooms.
 
----
+Layered architecture (API, frontend, shared library).
 
-## 🧩 Struktura projektu
+Integration with authentication systems (e.g., Identity / JWT).
 
-- `Chateeo.API` – główny backend (ASP.NET Core Web API z SignalR Hubem).
-- `Chateeo` – aplikacja kliencka (frontend .NET lub SPA hostowane przez serwer).
-- `SharedLibrary` – modele danych i klasy pomocnicze współdzielone między frontendem i backendem.
+Scalable backend based on ASP.NET Core Web API.
 
----
+🧩 Project Structure
 
-## ⚙️ Technologie
+Chateeo.API – main backend (ASP.NET Core Web API with SignalR Hub).
 
-- **.NET 7 / ASP.NET Core**
-- **SignalR** (komunikacja w czasie rzeczywistym)
-- **Entity Framework Core** (baza danych i migracje)
-- **C# 11**
-- **Razor / MVC / HTML / CSS / JS** (frontend)
+Chateeo – client application (frontend .NET or SPA hosted by the server).
 
----
+SharedLibrary – shared data models and helper classes between frontend and backend.
 
-## 💻 Instalacja i uruchomienie
+⚙️ Technologies
 
-### 1. Klonowanie repozytorium
+.NET 7 / ASP.NET Core
 
-```bash
+SignalR (real-time communication)
+
+Entity Framework Core (database and migrations)
+
+C# 11
+
+Razor / MVC / HTML / CSS / JS (frontend)
+
+💻 Installation and Running
+1. Clone the repository
 git clone https://github.com/KokeKoke1/Chateeo.git
 cd Chateeo
-```
 
-### 2. Przywracanie zależności i budowanie
-
-```bash
+2. Restore dependencies and build
 dotnet restore
 dotnet build Chateeo.sln
-```
 
-### 3. Konfiguracja bazy danych
+3. Database configuration
 
-W pliku `Chateeo.API/appsettings.json` ustaw połączenie w sekcji `ConnectionStrings`, np.:
+In Chateeo.API/appsettings.json, set your connection string under ConnectionStrings, for example:
 
-```json
 "ConnectionStrings": {
   "DefaultConnection": "Server=localhost;Database=ChateeoDb;Trusted_Connection=True;MultipleActiveResultSets=true"
 }
-```
 
-Zastosuj migracje, jeśli projekt używa **Entity Framework Core**:
 
-```bash
+Apply migrations if using Entity Framework Core:
+
 cd Chateeo.API
 dotnet ef database update
-```
 
-### 4. Uruchomienie aplikacji
+4. Run the application
 
-Uruchom backend:
+Run the backend:
 
-```bash
 dotnet run --project Chateeo.API/Chateeo.API.csproj
-```
 
-Domyślnie dostępne pod adresem `https://localhost:5001` lub `http://localhost:5000`.
 
-Frontend uruchom jako osobny projekt (jeśli wymaga):
+Default URLs: https://localhost:5001 or http://localhost:5000.
 
-```bash
+Run the frontend as a separate project (if required):
+
 dotnet run --project Chateeo/Chateeo.csproj
-```
 
-lub, jeśli zawiera plik `package.json`:
 
-```bash
+Or, if it has package.json:
+
 cd Chateeo
 npm install
 npm run dev
-```
 
----
+🔧 Environment Configuration
 
-## 🔧 Konfiguracja środowiska
+Config file: Chateeo.API/appsettings.json
 
-- **Plik konfiguracyjny:** `Chateeo.API/appsettings.json`
-- **Sekrety użytkownika:** przechowuj poufne dane (np. klucze JWT, connection strings) w `dotnet user-secrets` lub zmiennych środowiskowych.
-- **Porty:** sprawdź `Chateeo.API/Properties/launchSettings.json`, aby poznać porty lokalne.
+User secrets: store sensitive data (JWT keys, connection strings) in dotnet user-secrets or environment variables
 
----
+Ports: check Chateeo.API/Properties/launchSettings.json for local ports
 
-## 🧪 Testy
+🧪 Tests
 
-Jeśli repo zawiera testy jednostkowe:
+If the repo contains unit tests:
 
-```bash
 dotnet test
-```
 
----
+📦 Deployment (Optional)
 
-## 📦 Deployment (opcjonalnie)
+Chateeo can be deployed as Docker containers:
 
-Chateeo można wdrożyć jako kontenery Docker:
+Example Dockerfile (API):
 
-Przykład `Dockerfile` (API):
-
-```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY . .
+COPY . . 
 RUN dotnet restore Chateeo.sln
 RUN dotnet publish Chateeo.API/Chateeo.API.csproj -c Release -o /app/publish
 
@@ -131,20 +111,13 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Chateeo.API.dll"]
-```
 
----
+👥 Contributing
 
-## 👥 Wkład w projekt
+Fork the repository
 
-1. Forkuj repozytorium.
-2. Utwórz nowy branch dla swojej funkcji.
-3. Zrób commit i otwórz Pull Request.
-4. Upewnij się, że wszystkie testy przechodzą pomyślnie.
+Create a new branch for your feature
 
+Commit your changes and open a Pull Request
 
-
----
-
-> Chateeo – bezpieczny, firmowy komunikator czasu rzeczywistego oparty na ASP.NET Core i SignalR.
-
+Ensure all tests pass
